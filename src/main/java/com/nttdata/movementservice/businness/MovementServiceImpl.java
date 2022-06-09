@@ -61,7 +61,7 @@ public class MovementServiceImpl implements MovementService{
     @Autowired
     private TypeMovementRepository typeMovementRepository;
 
-    private WebClient movementClient;
+    //private WebClient movementClient;
 
     @Override
     /**
@@ -240,195 +240,6 @@ public class MovementServiceImpl implements MovementService{
     }
 
     /**
-     * Este método se encarga de consumir un servicio externo
-     * Este metodo consume al metodo api updateRemainder de product-service
-     * @param request objeto recibido de la api
-     * @return Mono<ResponseMovement> objeto devuelto por la base de datos
-     */
-    /*private Mono<ResponseMovement> updateRemainder(RequestMovement request) {
-        ResponseMovement response = new ResponseMovement();
-        Number remainder = 0;
-        Movement movement;
-
-        response.setAudit(new ResponseAudit());
-        response.getAudit().setDate(new Date());
-
-        //-obtener el saldo del producto
-        //-obtener todos los movimeintos del producto
-        //analizar el tipo de movimiento para saber si sumar o restar a ese valor
-        //llamar a product-service para que actualice nuevo saldo
-        //o devuelva el codigo de error indicando la regla de negocio violada
-
-        WebClient client = WebClient.builder().baseUrl("http://localhost:8005").build();
-        Mono<Product> product = client
-                .get()
-                .uri("/api/product", "{ \"id\":" + request.getIdProduct() + "}")
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToMono(Product.class);
-
-        if(null !=  product)
-        {
-            //remainderOriginal = product.block().getNumRemainder();
-            RequestTypeMovement requestTypeMovementInput = new RequestTypeMovement();
-            requestTypeMovementInput.setId(request.getIdTypeMovement());
-            String codeTypeMovementInput = typeMovementRepository.findTypeMovement(requestTypeMovementInput).get(0).getCode();
-
-            Mono<ResponseMovement> movementExist = findAllMovement(request);
-
-            if(movementExist.block().getAudit().getCode().equals(CODE_OK) || movementExist.block().getAudit().getCode().equals(CODE_NO_DATA)) {
-
-                //Boolean proceed = false;
-                Integer numMovements = 0;
-
-                switch (product.block().getSubTypeProduct().getCode()){
-                    case "00001": //SI LIMITE MAX MOV MES - NO COMISION - ahorro
-                        for(Movement movementElement: movementExist.block().getList()){
-                            if(movementElement.getFgActive()) {
-                                if(Utils.isCurrentMonth(movementElement.getFecMovement())) {
-                                    numMovements++;
-                                }
-                            }
-                        }
-
-                        if(numMovements < product.block().getSubTypeProduct().getLimitMount().intValue()) {
-                            switch (codeTypeMovementInput){
-                                case "00001":
-                                    remainder = product.block().getNumRemainder().doubleValue() + request.getNumAmount().doubleValue();
-                                    break;
-                                case "00002":
-                                    remainder = (product.block().getNumRemainder().doubleValue() - request.getNumAmount().doubleValue() > 0)?
-                                            product.block().getNumRemainder().doubleValue() - remainder.doubleValue():
-                                            product.block().getNumRemainder().doubleValue();
-                                    break;
-                                default:
-                                    remainder = product.block().getNumRemainder();
-                            }
-                        }
-
-                        break;
-                    case "00002": //NO LIMITE MAX MOV MES - SI COMISION - cuenta corriente
-                        switch (codeTypeMovementInput){
-                            case "00001":
-                                remainder = product.block().getNumRemainder().doubleValue() + request.getNumAmount().doubleValue();
-                                break;
-                            case "00002":
-                                remainder = (product.block().getNumRemainder().doubleValue() - request.getNumAmount().doubleValue() > 0)?
-                                        product.block().getNumRemainder().doubleValue() - remainder.doubleValue():
-                                        product.block().getNumRemainder().doubleValue();
-                                break;
-                            default:
-                                remainder = product.block().getNumRemainder();
-                        }
-
-                        break;
-                    case "00003": //SI LIMITE 1 MOV DIA ESPECIFICO (retiro o deposito) - NO COMISION - plazo fijo
-                        for(Movement movementElement: movementExist.block().getList()){
-                            if(movementElement.getFgActive()) {
-                                if(Utils.isDayMonth(movementElement.getFecMovement(), product.block().getSubTypeProduct().getNumDayMonth().intValue())) {
-                                    RequestTypeMovement requestTypeMovement = new RequestTypeMovement();
-                                    requestTypeMovement.setId(movementElement.getIdTypeMovement());
-
-                                    String codeTypeMovement = typeMovementRepository.findTypeMovement(requestTypeMovement).get(0).getCode();
-
-                                    if(codeTypeMovement.equals("00001") || codeTypeMovement.equals("00002")) {
-                                        numMovements++;
-                                    }
-                                }
-                            }
-                        }
-
-                        if(numMovements < product.block().getSubTypeProduct().getLimitDay().intValue()) {
-                            switch (codeTypeMovementInput){
-                                case "00001":
-                                    remainder = product.block().getNumRemainder().doubleValue() + request.getNumAmount().doubleValue();
-                                    break;
-                                case "00002":
-                                    remainder = (product.block().getNumRemainder().doubleValue() - request.getNumAmount().doubleValue() > 0)?
-                                            product.block().getNumRemainder().doubleValue() - remainder.doubleValue():
-                                            product.block().getNumRemainder().doubleValue();
-                                    break;
-                                default:
-                                    remainder = product.block().getNumRemainder();
-                            }
-                        }
-
-                        break;
-                    case "00004": //NO LIMITE MAX MOV - NO COMISION - personal
-                        switch (codeTypeMovementInput){
-                            case "00001":
-                                remainder = product.block().getNumRemainder().doubleValue() + request.getNumAmount().doubleValue();
-                                break;
-                            case "00002":
-                                remainder = (product.block().getNumRemainder().doubleValue() - request.getNumAmount().doubleValue() > 0)?
-                                        product.block().getNumRemainder().doubleValue() - remainder.doubleValue():
-                                        product.block().getNumRemainder().doubleValue();
-                                break;
-                            default:
-                                remainder = product.block().getNumRemainder();
-                        }
-                        break;
-                    case "00005": //NO LIMITE MAX MOV - NO COMISION - empresarial
-                        switch (codeTypeMovementInput){
-                            case "00001":
-                                remainder = product.block().getNumRemainder().doubleValue() + request.getNumAmount().doubleValue();
-                                break;
-                            case "00002":
-                                remainder = (product.block().getNumRemainder().doubleValue() - request.getNumAmount().doubleValue() > 0)?
-                                        product.block().getNumRemainder().doubleValue() - remainder.doubleValue():
-                                        product.block().getNumRemainder().doubleValue();
-                                break;
-                            default:
-                                remainder = product.block().getNumRemainder();
-                        }
-                        break;
-                    case "00006": //NO LIMITE MAX MOV - NO COMISION - tarjeta credito
-                        switch (codeTypeMovementInput){
-                            case "00001":
-                                remainder = product.block().getNumRemainder().doubleValue() + request.getNumAmount().doubleValue();
-                                break;
-                            case "00002":
-                                remainder = (product.block().getNumRemainder().doubleValue() - request.getNumAmount().doubleValue() > 0)?
-                                        product.block().getNumRemainder().doubleValue() - remainder.doubleValue():
-                                        product.block().getNumRemainder().doubleValue();
-                                break;
-                            default:
-                                remainder = product.block().getNumRemainder();
-                        }
-                        break;
-                    default:
-                }
-
-                if(remainder != product.block().getNumRemainder()) {
-
-                    Product productUpdate = new Product();
-                    productUpdate.setId(product.block().getId());
-                    productUpdate.setNumRemainder(remainder);
-
-                    client
-                            .post()
-                            .uri("/api/product/balance")
-                            .body(BodyInserters.fromPublisher(Mono.just(productUpdate), Product.class))
-                            .accept(MediaType.APPLICATION_JSON)
-                            .retrieve()
-                            .bodyToMono(Product.class);
-
-                    response.getAudit().setCode(CODE_OK);
-                } else {
-                    response.getAudit().setCode(CODE_PRODUCT_REMAINDER);
-                }
-
-            } else {
-                response.getAudit().setCode(CODE_UNKNOWN);
-            }
-        } else {
-            response.getAudit().setCode(CODE_PRODUCT);
-        }
-
-        return Mono.just(response);
-    }*/
-
-    /**
      * Este método se encarga de validar reglas de negocio para el registro de movimientos
      * @param product producto
      * @param requestMovement movimiento a validar
@@ -438,9 +249,12 @@ public class MovementServiceImpl implements MovementService{
     private MovementValidation validate(Product product, RequestMovement requestMovement, TypeMovement typeMovement) {
         MovementValidation validation = new MovementValidation();
 
+        TypeMovement typeMovementAbono = getTypeMovementByCode("00001");
+        TypeMovement typeMovementRetiro = getTypeMovementByCode("00002");
+
         switch (product.getSubTypeProduct().getCode()) {
             case "00001":
-                List<Movement> listMovementMonth = getListMovementMonth(product.getId(),"00001,00002");
+                List<Movement> listMovementMonth = getListMovementMonth(product.getId(),typeMovementAbono.getId().concat(",").concat(typeMovementRetiro.getId()));
                 if(listMovementMonth.size() < product.getSubTypeProduct().getLimitMount().intValue()) {
                     switch (typeMovement.getCode()) {
                         case "00001":
@@ -485,7 +299,7 @@ public class MovementServiceImpl implements MovementService{
 
                 break;
             case "00003":
-                List<Movement> listMovementDay = getListMovementDay(product.getId(), product.getSubTypeProduct().getNumDayMonth(), "00001,00002");
+                List<Movement> listMovementDay = getListMovementDay(product.getId(), product.getSubTypeProduct().getNumDayMonth(), typeMovementAbono.getId().concat(",").concat(typeMovementRetiro.getId()));
                 if(listMovementDay.size() < product.getSubTypeProduct().getLimitDay().intValue()) {
                     switch (typeMovement.getCode()) {
                         case "00001":
@@ -553,7 +367,7 @@ public class MovementServiceImpl implements MovementService{
                 break;
         }
 
-        return code;
+        return validation;
     }
 
     /**
@@ -630,6 +444,16 @@ public class MovementServiceImpl implements MovementService{
         return typeMovementRepository.findTypeMovement(requestTypeMovementInput).get(0);
     }
 
+    /**
+     * Este método se encarga de obtener un tipo de movimiento buscado por code
+     * @param code code del tipo de movimiento buscado
+     * @return TypeMovement objeto devuelto
+     */
+    private TypeMovement getTypeMovementByCode(String code) {
+        RequestTypeMovement requestTypeMovementInput = new RequestTypeMovement();
+        requestTypeMovementInput.setCode(code);
 
+        return typeMovementRepository.findTypeMovementByCode(code);
+    }
 
 }

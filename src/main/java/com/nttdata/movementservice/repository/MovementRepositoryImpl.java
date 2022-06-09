@@ -2,6 +2,7 @@ package com.nttdata.movementservice.repository;
 
 import com.nttdata.movementservice.model.api.RequestMovement;
 import com.nttdata.movementservice.model.entity.Movement;
+import com.nttdata.movementservice.model.entity.TypeMovement;
 import com.nttdata.movementservice.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -14,7 +15,9 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -87,5 +90,57 @@ class MovementRepositoryImpl implements MovementRepository {
         Update update = new Update().set("fgActive", false);
 
         return template.findAndModify(query, update, Movement.class);
+    }
+
+    @Override
+    /**
+     * Este método se encarga de buscar registros en la base de datos
+     * @param idProduct id del producto
+     * @param dayMonth dia del mes
+     * @param idsTypeMovement ids de tipo, separados por coma
+     * @return List<Movement> lista de registros obtenidos
+     */
+    public List<Movement> getListMovementDay(String idProduct, Number dayMonth, String idsTypeMovement) {
+        List<String> ids = new ArrayList<String>(Arrays.asList(idsTypeMovement.split(",")));
+
+        Date startDate = Utils.getFirstDayCurrentMonth();
+        Date endDate = Utils.getLastDayCurrentMonth();
+
+        List<Movement> listOriginal = template.find(new Query(Criteria.where("idProduct").is(idProduct)
+                        .andOperator(Criteria.where("fgActive").is(true))
+                        .andOperator(Criteria.where("fecMovement").gte(startDate).lt(endDate))
+                        .andOperator(Criteria.where("idTypeMovement").in(ids))
+                ),
+                Movement.class);
+
+        List<Movement> listFinal = new ArrayList<>();
+        for(Movement element: listOriginal) {
+            if(Utils.isDayMonth(element.getFecMovement(), dayMonth.intValue())) {
+                listFinal.add(element);
+            }
+        }
+
+        return listFinal;
+    }
+
+    @Override
+    /**
+     * Este método se encarga de buscar registros en la base de datos
+     * @param idProduct id del producto
+     * @param idsTypeMovement ids de tipo, separados por coma
+     * @return List<Movement> lista de registros obtenidos
+     */
+    public List<Movement> getListMovementMonth(String idProduct, String idsTypeMovement) {
+        List<String> ids = new ArrayList<String>(Arrays.asList(idsTypeMovement.split(",")));
+
+        Date startDate = Utils.getFirstDayCurrentMonth();
+        Date endDate = Utils.getLastDayCurrentMonth();
+
+        return template.find(new Query(Criteria.where("idProduct").is(idProduct)
+                        .andOperator(Criteria.where("fgActive").is(true))
+                        .andOperator(Criteria.where("fecMovement").gte(startDate).lt(endDate))
+                        .andOperator(Criteria.where("idTypeMovement").in(ids))
+                ),
+                Movement.class);
     }
 }

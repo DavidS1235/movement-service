@@ -69,6 +69,17 @@ class TypeMovementRepositoryImpl implements TypeMovementRepository {
 
     @Override
     /**
+     * Este método se encarga de buscar un registro en la base de datos
+     * @param code codigo de registro
+     * @return TypeMovement registros obtenido
+     */
+    public TypeMovement findTypeMovementByCode(String code) {
+        return template.find(new Query(Criteria.where("code").is(code)),
+                TypeMovement.class).get(0);
+    }
+
+    @Override
+    /**
      * Este método se encarga de borrar logicamente un registro en la base de datos
      * @param request objeto recibido de la api
      * @return TypeMovement objeto devuelto por la base de datos

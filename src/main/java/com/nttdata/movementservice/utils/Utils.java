@@ -11,7 +11,10 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.ZoneId;
+import java.time.temporal.TemporalAdjusters;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * Esta clase contiene funcionalidades utiles
@@ -124,5 +127,25 @@ public class Utils {
         }
 
         return result;
+    }
+
+    /**
+     * Este método obtiene una fecha correspondiente al primer dia del mes actual
+     * @return Date fecha obtenida
+     */
+    public static Date getFirstDayCurrentMonth() {
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(new Date());
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+
+        return calendar.getTime();
+    }
+
+    /**
+     * Este método obtiene una fecha correspondiente al ultimo dia del mes actual
+     * @return Date fecha obtenida
+     */
+    public static Date getLastDayCurrentMonth() {
+        return Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 }

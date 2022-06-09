@@ -15,6 +15,7 @@ public interface TypeMovementRepository {
     TypeMovement createTypeMovement(RequestTypeMovement request);
     List<TypeMovement> findAllTypeMovement(RequestTypeMovement request);
     List<TypeMovement> findTypeMovement(RequestTypeMovement request);
+    TypeMovement findTypeMovementByCode(String code);
 
     TypeMovement deleteTypeMovement(RequestTypeMovement request);
 }

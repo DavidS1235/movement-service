@@ -19,4 +19,8 @@ public interface MovementRepository {
     List<Movement> findAllMovement(RequestMovement request);
     Movement updateMovement(RequestMovement request);
     Movement deleteMovement(RequestMovement request);
+
+    List<Movement> getListMovementDay(String idProduct, Number dayMonth, String codesTypeMovement);
+    List<Movement> getListMovementMonth(String idProduct, String codesTypeMovement);
+
 }
