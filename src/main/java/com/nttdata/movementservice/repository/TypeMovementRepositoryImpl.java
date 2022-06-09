@@ -45,11 +45,8 @@ class TypeMovementRepositoryImpl implements TypeMovementRepository {
      * @return List<TypeMovement> lista de registros obtenidos
      */
     public List<TypeMovement> findAllTypeMovement(RequestTypeMovement request) {
-        List<TypeMovement> list = new ArrayList<>();
-
-        list = template.findAll(TypeMovement.class);
-
-        return list;
+        return template.find(new Query(Criteria.where("fgActive").is(request.getFgActive())),
+                TypeMovement.class);
     }
 
     @Override

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 @RestController
+@RequestMapping("/movement/type")
 @CrossOrigin(origins = "*", methods = {RequestMethod.POST})
 /**
  * Esta clase es la encargada de exponer las funcionalidades
@@ -21,7 +22,7 @@ public class TypeMovementController {
     private TypeMovementService typeMovementService;
 
     @PostMapping(
-            value = "/createTypeMovement",
+            value = "/create",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     /**
@@ -34,7 +35,7 @@ public class TypeMovementController {
     }
 
     @PostMapping(
-            value = "/findallTypeMovement",
+            value = "/findall",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     /**
@@ -47,7 +48,7 @@ public class TypeMovementController {
     }
 
     @PostMapping(
-            value = "/findTypeMovement",
+            value = "/find",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     /**
@@ -60,7 +61,7 @@ public class TypeMovementController {
     }
 
     @PostMapping(
-            value = "/deleteTypeMovement",
+            value = "/delete",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     /**
