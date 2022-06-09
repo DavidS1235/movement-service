@@ -15,7 +15,6 @@ public interface TypeMovementService {
     Mono<ResponseTypeMovement> createTypeMovement(RequestTypeMovement request);
     Mono<ResponseTypeMovement> findAllTypeMovement(RequestTypeMovement request);
     Mono<ResponseTypeMovement> findTypeMovement(RequestTypeMovement request);
-
     Mono<ResponseTypeMovement> deleteTypeMovement(RequestTypeMovement request);
 
 }

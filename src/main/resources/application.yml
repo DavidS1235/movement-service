@@ -25,11 +25,11 @@ spring:
   datasource:
     one:
       driver-class-name: org.MongoDriver.Driver
-      url: jdbc:mongo://localhost:27017/db_products
+      url: jdbc:mongo://localhost:27017/db_movement
   data:
     mongodb:
       uri: mongodb://localhost:27017/
-      database: db_products
+      database: db_movement
 
 logging:
   config:

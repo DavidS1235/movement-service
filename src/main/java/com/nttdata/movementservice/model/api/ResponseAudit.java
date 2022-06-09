@@ -19,4 +19,8 @@ public class ResponseAudit {
     String code;
     String message;
     Date date;
+
+    public void ResponseAudit(){
+        date = new Date();
+    }
 }

@@ -9,51 +9,22 @@ import com.nttdata.movementservice.model.entity.Product;
 import com.nttdata.movementservice.model.entity.TypeMovement;
 import com.nttdata.movementservice.repository.MovementRepository;
 import com.nttdata.movementservice.repository.TypeMovementRepository;
+import com.nttdata.movementservice.utils.Constant;
 import com.nttdata.movementservice.utils.MovementValidation;
 import com.nttdata.movementservice.utils.TypeValidationResult;
-import com.nttdata.movementservice.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.time.LocalDate;
-import java.time.Month;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Service
 public class MovementServiceImpl implements MovementService{
-
-    //Todo ok
-    final private static String CODE_OK = "0000";
-    //Se encontro un error generico
-    final private static String CODE_ERROR = "0001";
-    //Se encontro una excepcion
-    final private static String CODE_EXCEPTION = "0002";
-    //No se obtuvieron datos
-    final private static String CODE_NO_DATA = "0003";
-    //Error desconocido
-    final private static String CODE_UNKNOWN = "0004";
-    //El objeto no existe
-    final private static String CODE_NO_EXIST = "0005";
-
-    //No se pudo comunicar con el servicio de producto
-    final private static String CODE_PRODUCT = "0006";
-
-    //No se actualiza el saldo de producto
-    final private static String CODE_ERROR_PRODUCT_REMAINDER = "0007";
-    //No se ha superado la validacion de limites de movimientos
-    final private static String CODE_ERROR_LIMIT = "0008";
-    //No se ha superado la validacion de tipo de movimientos
-    final private static String CODE_ERROR_TYPE_MOVEMENT = "0009";
-    //Saldo insuficiente
-    final private static String CODE_ERROR_INSUFFICIENT_BALANCE = "0010";
 
     @Autowired
     private MovementRepository movementRepository;
@@ -71,13 +42,22 @@ public class MovementServiceImpl implements MovementService{
      */
     public Mono<ResponseMovement> createMovement(RequestMovement request) {
         ResponseMovement response = new ResponseMovement();
-        Movement movement;
-
-        response.setAudit(new ResponseAudit());
-        response.getAudit().setDate(new Date());
 
         try{
-            Product product = getProduct(request.getIdProduct());
+            MovementValidation validation = validate(request);
+
+            if(validation.getResult().equals(TypeValidationResult.OK)){
+                response.getList().add(movementRepository.createMovement(request));
+
+                if(validation.getUpdateRemainder()){
+                    updateProductRemainder(request.getIdProductDestiny(), validation.getRemainder());
+                }
+            }
+
+            response.getAudit().setCode(validation.getCode());
+
+
+            /*Product product = getProduct(request.getIdProduct());
             TypeMovement typeMovement = getTypeMovement(request.getIdTypeMovement());
 
             MovementValidation validation = validate(product, request, typeMovement);
@@ -88,23 +68,23 @@ public class MovementServiceImpl implements MovementService{
 
                     product = updateProductRemainder(product.getId(),validation.getRemainder());
 
-                    response.getAudit().setCode(CODE_OK);
+                    response.getAudit().setCode(Constant.CODE_OK);
                     response.setList(new ArrayList<>());
                     response.getList().add(movement);
                 } else {
-                    response.getAudit().setCode(CODE_ERROR_PRODUCT_REMAINDER);
+                    response.getAudit().setCode(Constant.CODE_ERROR_PRODUCT_REMAINDER);
                 }
             } else {
                 if(validation.getResult().equals(TypeValidationResult.ERROR_TYPE_MOVEMENT)) {
-                    response.getAudit().setCode(CODE_ERROR_TYPE_MOVEMENT);
+                    response.getAudit().setCode(Constant.CODE_ERROR_TYPE_MOVEMENT);
                 } else if(validation.getResult().equals(TypeValidationResult.ERROR_INSUFFICIENT_BALANCE)) {
-                    response.getAudit().setCode(CODE_ERROR_INSUFFICIENT_BALANCE);
+                    response.getAudit().setCode(Constant.CODE_ERROR_INSUFFICIENT_BALANCE);
                 } else if(validation.getResult().equals(TypeValidationResult.ERROR_LIMIT)) {
-                    response.getAudit().setCode(CODE_ERROR_LIMIT);
+                    response.getAudit().setCode(Constant.CODE_ERROR_LIMIT);
                 }
-            }
+            }*/
         } catch(Exception e){
-            response.getAudit().setCode(CODE_EXCEPTION);
+            response.getAudit().setCode(Constant.CODE_EXCEPTION);
             response.getAudit().setMessage(e.getMessage());
         }
 
@@ -129,19 +109,19 @@ public class MovementServiceImpl implements MovementService{
 
             if(null != list){
                 if(0 < list.size()){
-                    response.getAudit().setCode(CODE_OK);
+                    response.getAudit().setCode(Constant.CODE_OK);
                     response.setList(new ArrayList<>());
                     response.getList().addAll(list);
                 }
                 else{
-                    response.getAudit().setCode(CODE_NO_DATA);
+                    response.getAudit().setCode(Constant.CODE_NO_DATA);
                 }
             } else{
-                response.getAudit().setCode(CODE_UNKNOWN);
+                response.getAudit().setCode(Constant.CODE_UNKNOWN);
             }
 
         } catch(Exception e){
-            response.getAudit().setCode(CODE_EXCEPTION);
+            response.getAudit().setCode(Constant.CODE_EXCEPTION);
             response.getAudit().setMessage(e.getMessage());
         }
 
@@ -156,28 +136,39 @@ public class MovementServiceImpl implements MovementService{
      */
     public Mono<ResponseMovement> updateMovement(RequestMovement request) {
         ResponseMovement response = new ResponseMovement();
-        Movement movement;
+        //Movement movement;
 
-        response.setAudit(new ResponseAudit());
-        response.getAudit().setDate(new Date());
+        //response.setAudit(new ResponseAudit());
+        //response.getAudit().setDate(new Date());
 
         try{
-            movement = movementRepository.updateMovement(request);
+            MovementValidation validation = validate(request);
+
+            if(validation.getResult().equals(TypeValidationResult.OK)){
+                response.getList().add(movementRepository.updateMovement(request));
+
+                if(validation.getUpdateRemainder()){
+                    updateProductRemainder(request.getIdProductDestiny(), validation.getRemainder());
+                }
+            }
+
+            response.getAudit().setCode(validation.getCode());
+            /*movement = movementRepository.updateMovement(request);
 
             if(null != movement){
                 if(request.getId() != movement.getId()){
-                    response.getAudit().setCode(CODE_OK);
+                    response.getAudit().setCode(Constant.CODE_OK);
                     response.setList(new ArrayList<>());
                     response.getList().add(movement);
                 }
                 else{
-                    response.getAudit().setCode(CODE_ERROR);
+                    response.getAudit().setCode(Constant.CODE_ERROR);
                 }
             } else {
-                response.getAudit().setCode(CODE_UNKNOWN);
-            }
+                response.getAudit().setCode(Constant.CODE_UNKNOWN);
+            }*/
         } catch(Exception e){
-            response.getAudit().setCode(CODE_EXCEPTION);
+            response.getAudit().setCode(Constant.CODE_EXCEPTION);
             response.getAudit().setMessage(e.getMessage());
         }
 
@@ -192,28 +183,39 @@ public class MovementServiceImpl implements MovementService{
      */
     public Mono<ResponseMovement> deleteMovement(RequestMovement request) {
         ResponseMovement response = new ResponseMovement();
-        Movement movement;
+        //Movement movement;
 
-        response.setAudit(new ResponseAudit());
-        response.getAudit().setDate(new Date());
+        //response.setAudit(new ResponseAudit());
+        //response.getAudit().setDate(new Date());
 
         try{
-            movement = movementRepository.deleteMovement(request);
+            MovementValidation validation = validate(request);
+
+            if(validation.getResult().equals(TypeValidationResult.OK)){
+                response.getList().add(movementRepository.deleteMovement(request));
+
+                if(validation.getUpdateRemainder()){
+                    updateProductRemainder(request.getIdProductDestiny(), validation.getRemainder());
+                }
+            }
+
+            response.getAudit().setCode(validation.getCode());
+            /*movement = movementRepository.deleteMovement(request);
 
             if(null != movement){
                 if(request.getId() != movement.getId()){
-                    response.getAudit().setCode(CODE_OK);
+                    response.getAudit().setCode(Constant.CODE_OK);
                     response.setList(new ArrayList<>());
                     response.getList().add(movement);
                 }
                 else{
-                    response.getAudit().setCode(CODE_ERROR);
+                    response.getAudit().setCode(Constant.CODE_ERROR);
                 }
             } else {
-                response.getAudit().setCode(CODE_UNKNOWN);
-            }
+                response.getAudit().setCode(Constant.CODE_UNKNOWN);
+            }*/
         } catch(Exception e){
-            response.getAudit().setCode(CODE_EXCEPTION);
+            response.getAudit().setCode(Constant.CODE_EXCEPTION);
             response.getAudit().setMessage(e.getMessage());
         }
 
@@ -397,15 +399,23 @@ public class MovementServiceImpl implements MovementService{
      * @return Product objeto devuelto
      */
     private Product getProduct(String idProduct) {
-        WebClient client = WebClient.builder().baseUrl("http://localhost:8005").build();
+        Product product = new Product();
+        product.setDate(new Date());
+        product.setNumRemainder(100);
+        //product.setSubTypeProduct(new SubTypeProduct("62a108119a187804be4dc14f","SP0001","Ahorro"));
+        product.setIdBank("1");
+        product.setIdClient("1");
+        product.setTpeCrrency("1");
+
+        /*WebClient client = WebClient.builder().baseUrl("http://localhost:8005").build();
         Mono<Product> product = client
                 .get()
                 .uri("/api/product", "{ \"id\":" + idProduct + "}")
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .bodyToMono(Product.class);
+                .bodyToMono(Product.class);*/
 
-        return product.block();
+        return product;
     }
 
     /**
@@ -456,4 +466,22 @@ public class MovementServiceImpl implements MovementService{
         return typeMovementRepository.findTypeMovementByCode(code);
     }
 
+    /**
+     * Este método se encarga de validar las reglas de negocio de movimientos
+     * @param request objeto recibido de la api
+     * @return MovementValidation objeto devuelto
+     */
+    public MovementValidation validate(RequestMovement request){
+        MovementValidation result = new MovementValidation();
+        //%%%%
+        try{
+            TypeMovement typeMovement = getTypeMovement(request.getIdTypeMovement());
+
+            result.setResult(TypeValidationResult.OK);
+        } catch(Exception e){
+            result.setResult(TypeValidationResult.EXCEPTION);
+        }
+
+        return result;
+    }
 }

@@ -9,11 +9,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "TYPE_MOVEMENT")
-/**
- * Esta clase implementa un registro tipo de movimiento en la base de datos
- */
-public class TypeMovement {
+@Document("TYPE_RULE")
+public class TypeRule {
 
     @Id
     private String id;

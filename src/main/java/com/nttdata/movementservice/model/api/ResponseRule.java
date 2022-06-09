@@ -1,10 +1,9 @@
 package com.nttdata.movementservice.model.api;
 
 import com.nttdata.movementservice.model.entity.Movement;
+import com.nttdata.movementservice.model.entity.Rule;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @ToString
@@ -13,15 +12,14 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 /**
- * Esta clase implementa una respuesta de movimiento de la api
+ * Esta clase implementa una respuesta de regla de la api
  */
-public class ResponseMovement {
+public class ResponseRule {
 
     ResponseAudit audit;
-    List<Movement> list;
+    List<Rule> list;
 
-    public void ResponseMovement(){
+    public void ResponseRule(){
         setAudit(new ResponseAudit());
-        list = new ArrayList<>();
     }
 }

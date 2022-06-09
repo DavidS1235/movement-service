@@ -2,9 +2,11 @@ package com.nttdata.movementservice.utils;
 
 import com.nttdata.movementservice.model.api.RequestMovement;
 import com.nttdata.movementservice.model.api.RequestTypeMovement;
+import com.nttdata.movementservice.model.api.RequestTypeRule;
 import com.nttdata.movementservice.model.api.ResponseMovement;
 import com.nttdata.movementservice.model.entity.Movement;
 import com.nttdata.movementservice.model.entity.TypeMovement;
+import com.nttdata.movementservice.model.entity.TypeRule;
 import org.springframework.beans.BeanUtils;
 
 import java.time.Instant;
@@ -147,5 +149,17 @@ public class Utils {
      */
     public static Date getLastDayCurrentMonth() {
         return Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
+
+    /**
+     * Este método se encarga de convertir un objeto request a un objeto de base de datos
+     * @param request objeto request
+     * @return TypeMovement objeto de base de datos
+     */
+    public static TypeRule RequestToTypeRule(RequestTypeRule request){
+        TypeRule typeRule = new TypeRule();
+        BeanUtils.copyProperties(request, typeRule);
+
+        return typeRule;
     }
 }

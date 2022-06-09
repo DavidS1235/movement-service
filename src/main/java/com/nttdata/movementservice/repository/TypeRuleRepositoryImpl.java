@@ -1,9 +1,9 @@
 package com.nttdata.movementservice.repository;
 
-import com.nttdata.movementservice.model.api.RequestMovement;
 import com.nttdata.movementservice.model.api.RequestTypeMovement;
-import com.nttdata.movementservice.model.entity.Movement;
+import com.nttdata.movementservice.model.api.RequestTypeRule;
 import com.nttdata.movementservice.model.entity.TypeMovement;
+import com.nttdata.movementservice.model.entity.TypeRule;
 import com.nttdata.movementservice.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -13,7 +13,6 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,7 +20,7 @@ import java.util.List;
  * para la comunicacion con la base de datos
  */
 @Repository
-class TypeMovementRepositoryImpl implements TypeMovementRepository {
+class TypeRuleRepositoryImpl implements TypeRuleRepository {
 
     @Autowired
     private MongoTemplate template;
@@ -32,10 +31,10 @@ class TypeMovementRepositoryImpl implements TypeMovementRepository {
      * @param request objeto recibido de la api
      * @return TypeMovement objeto devuelto por la base de datos
      */
-    public TypeMovement createTypeMovement(RequestTypeMovement request) {
+    public TypeRule createTypeRule(RequestTypeRule request) {
         request.setFgActive(true);
 
-        return template.insert(Utils.RequestToTypeMovement(request));
+        return template.insert(Utils.RequestToTypeRule(request));
     }
 
     @Override
@@ -44,9 +43,9 @@ class TypeMovementRepositoryImpl implements TypeMovementRepository {
      * @param request objeto recibido de la api con los filtros de busqueda
      * @return List<TypeMovement> lista de registros obtenidos
      */
-    public List<TypeMovement> findAllTypeMovement(RequestTypeMovement request) {
+    public List<TypeRule> findAllTypeRule(RequestTypeRule request) {
         return template.find(new Query(Criteria.where("fgActive").is(request.getFgActive())),
-                TypeMovement.class);
+                TypeRule.class);
     }
 
     @Override
@@ -55,11 +54,11 @@ class TypeMovementRepositoryImpl implements TypeMovementRepository {
      * @param request objeto recibido de la api con los filtros de busqueda
      * @return List<TypeMovement> lista de registros obtenidos
      */
-    public List<TypeMovement> findTypeMovement(RequestTypeMovement request) {
-        List<TypeMovement> list = new ArrayList<>();
+    public List<TypeRule> findTypeRule(RequestTypeRule request) {
+        List<TypeRule> list = new ArrayList<>();
 
         list = template.find(new Query(Criteria.where("id").is(request.getId())),
-                TypeMovement.class);
+                TypeRule.class);
 
         return list;
     }
@@ -70,9 +69,9 @@ class TypeMovementRepositoryImpl implements TypeMovementRepository {
      * @param code codigo de registro
      * @return TypeMovement registros obtenido
      */
-    public TypeMovement findTypeMovementByCode(String code) {
+    public TypeRule findTypeRuleByCode(String code) {
         return template.find(new Query(Criteria.where("code").is(code)),
-                TypeMovement.class).get(0);
+                TypeRule.class).get(0);
     }
 
     @Override
@@ -81,10 +80,10 @@ class TypeMovementRepositoryImpl implements TypeMovementRepository {
      * @param request objeto recibido de la api
      * @return TypeMovement objeto devuelto por la base de datos
      */
-    public TypeMovement deleteTypeMovement(RequestTypeMovement request) {
+    public TypeRule deleteTypeRule(RequestTypeRule request) {
         Query query = new Query(Criteria.where("id").is(request.getId()));
         Update update = new Update().set("fgActive", false);
 
-        return template.findAndModify(query, update, TypeMovement.class);
+        return template.findAndModify(query, update, TypeRule.class);
     }
 }

@@ -1,25 +1,25 @@
 package com.nttdata.movementservice.controller;
 
-import com.nttdata.movementservice.businness.MovementService;
 import com.nttdata.movementservice.businness.TypeMovementService;
-import com.nttdata.movementservice.model.api.RequestMovement;
+import com.nttdata.movementservice.businness.TypeRuleService;
 import com.nttdata.movementservice.model.api.RequestTypeMovement;
-import com.nttdata.movementservice.model.api.ResponseMovement;
+import com.nttdata.movementservice.model.api.RequestTypeRule;
 import com.nttdata.movementservice.model.api.ResponseTypeMovement;
+import com.nttdata.movementservice.model.api.ResponseTypeRule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/movement/type")
+@RequestMapping("/rule/type")
 @CrossOrigin(origins = "*", methods = {RequestMethod.POST})
 /**
  * Esta clase es la encargada de exponer las funcionalidades
  */
-public class TypeMovementController {
+public class TypeRuleController {
     @Autowired
-    private TypeMovementService typeMovementService;
+    private TypeRuleService typeRuleService;
 
     @PostMapping(
             value = "/create",
@@ -28,10 +28,10 @@ public class TypeMovementController {
     /**
      * Este método se encarga de solicitar la creacion de un registro
      * @param request objeto recibido de la api
-     * @return Mono<ResponseTypeMovement> objeto devuelto por la base de datos
+     * @return Mono<ResponseTypeRule> objeto devuelto por la base de datos
      */
-    public Mono<ResponseTypeMovement> createTypeMovement(@RequestBody RequestTypeMovement request){
-        return typeMovementService.createTypeMovement(request);
+    public Mono<ResponseTypeRule> createTypeRule(@RequestBody RequestTypeRule request){
+        return typeRuleService.createTypeRule(request);
     }
 
     @PostMapping(
@@ -43,8 +43,8 @@ public class TypeMovementController {
      * @param request objeto recibido de la api con los filtros de busqueda
      * @return Mono<ResponseTypeMovement> lista de registros obtenidos
      */
-    public Mono<ResponseTypeMovement> findAllTypeMovement(@RequestBody RequestTypeMovement request){
-        return typeMovementService.findAllTypeMovement(request);
+    public Mono<ResponseTypeRule> findAllTypeRule(@RequestBody RequestTypeRule request){
+        return typeRuleService.findAllTypeRule(request);
     }
 
     @PostMapping(
@@ -56,8 +56,8 @@ public class TypeMovementController {
      * @param request objeto recibido de la api con los filtros de busqueda
      * @return Mono<ResponseTypeMovement> lista de registros obtenidos
      */
-    public Mono<ResponseTypeMovement> findTypeMovement(@RequestBody RequestTypeMovement request){
-        return typeMovementService.findTypeMovement(request);
+    public Mono<ResponseTypeRule> findTypeRule(@RequestBody RequestTypeRule request){
+        return typeRuleService.findTypeRule(request);
     }
 
     @PostMapping(
@@ -69,8 +69,8 @@ public class TypeMovementController {
      * @param request objeto recibido de la api
      * @return Mono<ResponseTypeMovement> objeto devuelto por la base de datos
      */
-    public Mono<ResponseTypeMovement> deleteTypeMovement(@RequestBody RequestTypeMovement request){
-        return typeMovementService.deleteTypeMovement(request);
+    public Mono<ResponseTypeRule> deleteTypeRule(@RequestBody RequestTypeRule request){
+        return typeRuleService.deleteTypeRule(request);
     }
 
 }

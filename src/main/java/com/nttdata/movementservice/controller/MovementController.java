@@ -10,6 +10,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
+@RequestMapping("/movement")
 @CrossOrigin(origins = "*", methods = {RequestMethod.POST})
 /**
  * Esta clase es la encargada de exponer las funcionalidades

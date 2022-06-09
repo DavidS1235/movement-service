@@ -11,17 +11,15 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "MOVEMENT")
+@Document(collection = "RULE")
 /**
- * Esta clase implementa un registro movimiento en la base de datos
+ * Esta clase implementa un registro regla en la base de datos
  */
-public class Movement {
+public class Rule {
     @Id
     private String id;
-    private String idProductDestiny;
-    private Date fecMovement;
-    private String idTypeMovement;
+    private String idSubTypeProduct;
+    private String idTypeRule;
     private Number numAmount;
-    private String idProductOrigin;
     private Boolean fgActive;
 }
