@@ -34,7 +34,6 @@
 #logging:
 #  config:
 #    classpath: logback-test.xml
-
 #---
 # SOLO PARA PRUEBA
 spring:
