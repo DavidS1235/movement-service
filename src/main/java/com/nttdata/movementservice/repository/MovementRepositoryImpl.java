@@ -18,6 +18,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Esta clase se encarga de implementar la funcionalidad de la interfaz
+ * para la comunicacion con la base de datos
+ */
 @Repository
 class MovementRepositoryImpl implements MovementRepository {
 
@@ -25,6 +29,11 @@ class MovementRepositoryImpl implements MovementRepository {
     private MongoTemplate template;
 
     @Override
+    /**
+     * Este método se encarga de crear un registro en la base de datos
+     * @param request objeto recibido de la api
+     * @return Movement objeto devuelto por la base de datos
+     */
     public Movement createMovement(RequestMovement request) {
         request.setFecMovement(new Date());
         request.setFgActive(true);
@@ -33,6 +42,11 @@ class MovementRepositoryImpl implements MovementRepository {
     }
 
     @Override
+    /**
+     * Este método se encarga de buscar registros en la base de datos
+     * @param request objeto recibido de la api con los filtros de busqueda
+     * @return List<Movement> lista de registros obtenidos
+     */
     public List<Movement> findAllMovement(RequestMovement request) {
         List<Movement> list = new ArrayList<>();
 
@@ -49,6 +63,11 @@ class MovementRepositoryImpl implements MovementRepository {
     }
 
     @Override
+    /**
+     * Este método se encarga de actualizar un registro en la base de datos
+     * @param request objeto recibido de la api
+     * @return Movement objeto devuelto por la base de datos
+     */
     public Movement updateMovement(RequestMovement request) {
         Query query = new Query(Criteria.where("id").is(request.getId()));
         Update update = new Update().set("numAmount", request.getNumAmount())
@@ -58,6 +77,11 @@ class MovementRepositoryImpl implements MovementRepository {
     }
 
     @Override
+    /**
+     * Este método se encarga de borrar logicamente un registro en la base de datos
+     * @param request objeto recibido de la api
+     * @return Movement objeto devuelto por la base de datos
+     */
     public Movement deleteMovement(RequestMovement request) {
         Query query = new Query(Criteria.where("id").is(request.getId()));
         Update update = new Update().set("fgActive", false);

@@ -11,6 +11,9 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+/**
+ * Esta clase implementa un registro de auditoria de la api
+ */
 public class ResponseAudit {
 
     String code;

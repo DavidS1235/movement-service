@@ -15,12 +15,10 @@ import java.util.Date;
 /**
  * Esta clase implementa un requerimiento de movimiento de la api
  */
-public class RequestMovement {
+public class RequestTypeMovement {
     private String id;
-    private String idProduct;
-    private Date fecMovement;
-    private String idTypeMovement;
-    private Number numAmount;
+    private String code;
+    private String name;
     private Boolean fgActive;
 
 }

@@ -6,15 +6,15 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
-
-//@Data
-//@Entity
 @ToString
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(collection = "movement")
+/**
+ * Esta clase implementa un registro movimiento en la base de datos
+ */
 public class Movement {
     @Id
     private String id;

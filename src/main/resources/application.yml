@@ -34,3 +34,11 @@ spring:
 logging:
   config:
     classpath: logback-test.xml
+
+#---
+# SOLO PARA PRUEBA
+#spring:
+#  application:
+#    name: product-service
+#  config:
+#    import: configserver:http://localhost:8081

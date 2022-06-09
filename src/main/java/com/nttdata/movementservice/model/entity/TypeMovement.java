@@ -4,16 +4,21 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-//@Data
 @ToString
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "TYPE_MOVEMENT")
+@Document("type_movement")
+/**
+ * Esta clase implementa un registro tipo de movimiento en la base de datos
+ */
 public class TypeMovement {
+
     @Id
-    private Integer id;
+    private String id;
     private String code;
     private String name;
+    private Boolean fgActive;
+
 }

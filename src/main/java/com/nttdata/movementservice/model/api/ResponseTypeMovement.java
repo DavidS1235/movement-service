@@ -1,6 +1,7 @@
 package com.nttdata.movementservice.model.api;
 
 import com.nttdata.movementservice.model.entity.Movement;
+import com.nttdata.movementservice.model.entity.TypeMovement;
 import lombok.*;
 
 import java.util.List;
@@ -11,10 +12,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 /**
- * Esta clase implementa una respuesta de movimiento de la api
+ * Esta clase implementa una respuesta de tipo de movimiento de la api
  */
-public class ResponseMovement {
+public class ResponseTypeMovement {
 
     ResponseAudit audit;
-    List<Movement> list;
+    List<TypeMovement> list;
 }

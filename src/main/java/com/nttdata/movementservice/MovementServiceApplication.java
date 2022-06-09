@@ -1,6 +1,5 @@
 package com.nttdata.movementservice;
 
-import com.nttdata.movementservice.client.MovementClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -15,17 +14,28 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 
 @SpringBootApplication
 @EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class, XADataSourceAutoConfiguration.class})
+/**
+ * Clase pincipal
+ */
 public class MovementServiceApplication implements CommandLineRunner {
 
 	private final Logger logger = LoggerFactory.getLogger("MovementServiceApplication");
 
+	/**
+	 * Éste es el método principal del proyecto
+	 * @param args[] es un arreglo con los parámetros que el reciba por consola
+	 * @return void
+	 */
 	public static void main(String[] args) {
 		ConfigurableApplicationContext context = SpringApplication.run(MovementServiceApplication.class, args);
-
-		//MovementClient movementClient = context.getBean(MovementClient.class);
 	}
 
 	@Override
+	/**
+	 * Este método se encarga de iniciar la ejecución
+	 * @param args[] es un arreglo con los parámetros que el reciba por consola
+	 * @return void
+	 */
 	public void run(String... args) throws Exception {
 
 	}

@@ -10,6 +10,10 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
+/**
+ * Esta clase es la interfaz que permite respetar la separacion entre
+ * la capa de negocios y datos
+ */
 public interface MovementRepository {
     Movement createMovement(RequestMovement request);
     List<Movement> findAllMovement(RequestMovement request);
