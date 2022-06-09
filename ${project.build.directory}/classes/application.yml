@@ -1,0 +1,36 @@
+# ---
+# SOLO PARA CONFIG-SERVER
+#  spring:
+##    config:
+##      import: 'configserver:'
+#    application:
+#      name: movement-service
+#    cloud:
+#      config:
+#        uri: http://localhost:8081
+#        name: ds
+#        password: ds123
+#---
+# SOLO PARA LOCAL
+server:
+  port: 8006
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+spring:
+#  config:
+#      import: 'optional:configserver:'
+  datasource:
+    one:
+      driver-class-name: org.MongoDriver.Driver
+      url: jdbc:mongo://localhost:27017/db_products
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/
+      database: db_products
+
+logging:
+  config:
+    classpath: logback-test.xml
