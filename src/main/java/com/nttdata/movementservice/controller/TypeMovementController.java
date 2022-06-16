@@ -6,6 +6,7 @@ import com.nttdata.movementservice.model.api.RequestMovement;
 import com.nttdata.movementservice.model.api.RequestTypeMovement;
 import com.nttdata.movementservice.model.api.ResponseMovement;
 import com.nttdata.movementservice.model.api.ResponseTypeMovement;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ import reactor.core.publisher.Mono;
 public class TypeMovementController {
     @Autowired
     private TypeMovementService typeMovementService;
-
+    @CircuitBreaker(name = "movement")
     @PostMapping(
             value = "/create",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -33,7 +34,7 @@ public class TypeMovementController {
     public Mono<ResponseTypeMovement> createTypeMovement(@RequestBody RequestTypeMovement request){
         return typeMovementService.createTypeMovement(request);
     }
-
+    @CircuitBreaker(name = "movement")
     @PostMapping(
             value = "/findall",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -46,7 +47,7 @@ public class TypeMovementController {
     public Mono<ResponseTypeMovement> findAllTypeMovement(@RequestBody RequestTypeMovement request){
         return typeMovementService.findAllTypeMovement(request);
     }
-
+    @CircuitBreaker(name = "movement")
     @PostMapping(
             value = "/find",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -59,7 +60,7 @@ public class TypeMovementController {
     public Mono<ResponseTypeMovement> findTypeMovement(@RequestBody RequestTypeMovement request){
         return typeMovementService.findTypeMovement(request);
     }
-
+    @CircuitBreaker(name = "movement")
     @PostMapping(
             value = "/delete",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -69,6 +70,7 @@ public class TypeMovementController {
      * @param request objeto recibido de la api
      * @return Mono<ResponseTypeMovement> objeto devuelto por la base de datos
      */
+
     public Mono<ResponseTypeMovement> deleteTypeMovement(@RequestBody RequestTypeMovement request){
         return typeMovementService.deleteTypeMovement(request);
     }

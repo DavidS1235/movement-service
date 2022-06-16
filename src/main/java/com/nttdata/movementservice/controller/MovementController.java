@@ -3,6 +3,7 @@ package com.nttdata.movementservice.controller;
 import com.nttdata.movementservice.model.api.RequestMovement;
 import com.nttdata.movementservice.model.api.ResponseMovement;
 import com.nttdata.movementservice.businness.MovementService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ public class MovementController {
     @Autowired
     private MovementService movementService;
 
+    @CircuitBreaker(name = "movement")
     @PostMapping(
             value = "/create",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -30,7 +32,7 @@ public class MovementController {
     public Mono<ResponseMovement> createMovement(@RequestBody RequestMovement request){
         return movementService.createMovement(request);
     }
-
+    @CircuitBreaker(name = "movement")
     @PostMapping(
             value = "/findall",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -43,7 +45,7 @@ public class MovementController {
     public Mono<ResponseMovement> findAllMovement(@RequestBody RequestMovement request){
         return movementService.findAllMovement(request);
     }
-
+    @CircuitBreaker(name = "movement")
     @PostMapping(
             value = "/update",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -56,7 +58,7 @@ public class MovementController {
     public Mono<ResponseMovement> updateMovement(@RequestBody RequestMovement request){
         return movementService.updateMovement(request);
     }
-
+    @CircuitBreaker(name = "movement")
     @PostMapping(
             value = "/delete",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -69,7 +71,7 @@ public class MovementController {
     public Mono<ResponseMovement> deleteMovement(@RequestBody RequestMovement request){
         return movementService.deleteMovement(request);
     }
-
+    @CircuitBreaker(name = "movement")
     @PostMapping(
             value = "/callClient",
             consumes = MediaType.APPLICATION_JSON_VALUE,
