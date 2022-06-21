@@ -11,6 +11,6 @@ import lombok.*;
  * Esta clase implementa una respuesta de validacion de movimiento
  */
 public class MovementValidation {
-    private TypeValidationResult result;
-    private Number remainder;
+  private TypeValidationResult result;
+  private Number remainder;
 }

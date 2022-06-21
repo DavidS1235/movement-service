@@ -5,7 +5,7 @@
             <Pattern>
                 %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %level %logger - %msg%n
             </Pattern>
-        </encoder  >
+        </encoder>
     </appender>
 
     <root level="DEBUG">

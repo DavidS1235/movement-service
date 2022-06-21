@@ -1,10 +1,9 @@
 package com.nttdata.movementservice.model.entity;
 
+import java.util.Date;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.util.Date;
 
 @ToString
 @Getter
@@ -14,14 +13,14 @@ import java.util.Date;
 @Document(collection = "PRODUCT")
 public class Product {
 
-    @Id
-    private String id;
-    private String idBank;
-    private String tpeCrrency;
-    private Number numRemainder;
+  @Id
+  private String id;
+  private String idBank;
+  private String tpeCrrency;
+  private Number numRemainder;
 
-    private Date date;
-    private SubTypeProduct subTypeProduct;
-    private String idClient;
+  private Date date;
+  private SubTypeProduct subTypeProduct;
+  private String idClient;
 
 }

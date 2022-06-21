@@ -12,9 +12,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document("TYPE_PRODUCT")
 public class TypeProduct {
 
-    @Id
-    private String id;
-    private String code;
-    private String name;
+  @Id
+  private String id;
+  private String code;
+  private String name;
 
 }

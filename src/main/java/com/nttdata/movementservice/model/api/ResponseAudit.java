@@ -1,8 +1,7 @@
 package com.nttdata.movementservice.model.api;
 
-import lombok.*;
-
 import java.util.Date;
+import lombok.*;
 
 
 //@Data
@@ -16,7 +15,7 @@ import java.util.Date;
  */
 public class ResponseAudit {
 
-    String code;
-    String message;
-    Date date;
+  String code;
+  String message;
+  Date date;
 }

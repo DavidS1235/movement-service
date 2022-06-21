@@ -1,8 +1,7 @@
 package com.nttdata.movementservice.model.api;
 
-import lombok.*;
-
 import java.util.Date;
+import lombok.*;
 
 //@Data
 @ToString
@@ -16,11 +15,11 @@ import java.util.Date;
  * Esta clase implementa un requerimiento de movimiento de la api
  */
 public class RequestMovement {
-    private String id;
-    private String idProduct;
-    private Date fecMovement;
-    private String idTypeMovement;
-    private Number numAmount;
-    private Boolean fgActive;
+  private String id;
+  private String idProduct;
+  private Date fecMovement;
+  private String idTypeMovement;
+  private Number numAmount;
+  private Boolean fgActive;
 
 }

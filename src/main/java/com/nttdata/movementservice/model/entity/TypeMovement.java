@@ -15,10 +15,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
  */
 public class TypeMovement {
 
-    @Id
-    private String id;
-    private String code;
-    private String name;
-    private Boolean fgActive;
+  @Id
+  private String id;
+  private String code;
+  private String name;
+  private Boolean fgActive;
 
 }
