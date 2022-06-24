@@ -11,6 +11,7 @@ import lombok.*;
  * Esta clase implementa una respuesta de validacion de movimiento
  */
 public class MovementValidation {
+<<<<<<< HEAD
     private String code;
     private TypeValidationResult result;
     private Number remainder;
@@ -22,4 +23,8 @@ public class MovementValidation {
         updateRemainder = false;
         remainder = -1;
     }
+=======
+  private TypeValidationResult result;
+  private Number remainder;
+>>>>>>> 5a3f7c8451b9337193a9360f475831469400568d
 }

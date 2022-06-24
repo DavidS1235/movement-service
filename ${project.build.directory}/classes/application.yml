@@ -20,8 +20,8 @@ management:
       exposure:
         include: "*"
 spring:
-#  config:
-#      import: 'optional:configserver:'
+  #  config:
+  #      import: 'optional:configserver:'
   datasource:
     one:
       driver-class-name: org.MongoDriver.Driver

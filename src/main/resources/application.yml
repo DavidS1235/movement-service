@@ -12,15 +12,28 @@
 #        password: ds123
 #---
 # SOLO PARA LOCAL
-server:
-  port: 8006
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-spring:
+#server:
+#  port: 8006
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: "*"
+#spring:
+##  config:
+##      import: 'optional:configserver:'
+#  datasource:
+#    one:
+#      driver-class-name: org.MongoDriver.Driver
+#      url: jdbc:mongo://localhost:27017/db_products
+#  data:
+#    mongodb:
+#      uri: mongodb://localhost:27017/
+#      database: db_products
+#
+#logging:
 #  config:
+<<<<<<< HEAD
 #      import: 'optional:configserver:'
   datasource:
     one:
@@ -35,10 +48,13 @@ logging:
   config:
     classpath: logback-test.xml
 
+=======
+#    classpath: logback-test.xml
+>>>>>>> 5a3f7c8451b9337193a9360f475831469400568d
 #---
 # SOLO PARA PRUEBA
-#spring:
-#  application:
-#    name: product-service
-#  config:
-#    import: configserver:http://localhost:8081
+spring:
+  application:
+    name: movement-service
+  config:
+    import: configserver:http://localhost:8081
